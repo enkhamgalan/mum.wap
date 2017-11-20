@@ -1,12 +1,15 @@
-package utility;
+package usa.edu.mum.wap.utility;
 
-import model.Task;
+import usa.edu.mum.wap.model.Task;
 
 import java.util.ArrayList;
 
-/** utility class to return mock data for testing
- *  @since 11/19/2017
- *  @author kl */
+/**
+ * utility class to return mock data for testing
+ *
+ * @author kl
+ * @since 11/19/2017
+ */
 public class MockData {
 
     public ArrayList<Task> taskList = new ArrayList<>();

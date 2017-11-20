@@ -1,8 +1,8 @@
-package controller;
+package usa.edu.mum.wap.controller;
 
 import com.google.gson.Gson;
-import model.Task;
-import utility.MockData;
+import usa.edu.mum.wap.model.Task;
+import usa.edu.mum.wap.utility.MockData;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/TaskServlet")

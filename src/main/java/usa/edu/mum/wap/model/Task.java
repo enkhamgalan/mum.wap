@@ -1,4 +1,4 @@
-package model;
+package usa.edu.mum.wap.model;
 
 public class Task {
 
