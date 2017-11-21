@@ -15,60 +15,78 @@
 	<header>
 		<span>Task list</span>
 	</header>
-	<main  id="taskPage">
-	<section id="taskCreation" class="not">
-		<form id="taskForm">
-			<input type="hidden" name="id"/>
-			<div>
-				<label>Task</label> <input type="text" required="required"
-					name="task" class="large" placeholder="Breakfast at Tiffanys" maxlength="200"  />
-			</div>
-			<div>
-				<label>Required by</label> <input type="date" required="required"
-					name="requiredBy" />
-			</div>
-			<div>
-				<label>Category</label> <select name="category">
-					<option value="Personal">Personal</option>
-					<option value="Work">Work</option>
-				</select>
-			</div>
-			<div>
-                <label>User ID:</label>
-                <input type="text" name="userID" class="large"
-                       placeholder="Enter your user ID. (4+ digit number)"
-                       pattern="[0-9]{4,}" required/>
-            </div>
-			<nav>
-				<a href="#" id="saveTask">Save task</a>    <!-- https://stackoverflow.com/questions/4855168/what-is-href-and-why-is-it-used -->
-				<a href="#" id="clearTask">Clear task</a>
-			</nav>
-		</form>
-	</section>
-	<section>
-		<table id="tblTasks">
-			<colgroup>
-				<col width="40%">
-				<col width="15%">
-				<col width="15%">
-				<col width="30%">
-			</colgroup>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Due</th>
-					<th>Category</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
-		<nav>
-			<a href="#" id="btnAddTask">Add task</a>
-			<a href="#" id="btnRetrieveTasks">Retrieve tasks from server</a>
-		</nav>
-	</section>
+	<main id="taskPage">
+        <section id="taskCreation" class="not">
+            <form id="taskForm">
+                <input type="hidden" name="id"/>
+                <div>
+                    <label>Task</label>
+                    <input type="text" required="required" name="task" class="large"
+                           placeholder="Breakfast at Tiffanys" maxlength="200"  />
+                </div>
+
+                <div>
+                    <label>Required by</label>
+                    <input type="date" required="required" name="requiredBy"/>
+                </div>
+
+                <div>
+                    <label>Category</label>
+                    <select name="category">
+                        <option value="Personal">Personal</option>
+                        <option value="Work">Work</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>User ID:</label>
+                    <input type="text" name="userID" class="large" placeholder="User ID." required/>
+                </div>
+
+                <div>
+                    <label>Level of Priority:</label>
+                    <select name="priority">
+                        <option value="high" data-order="1" selected>High "Urgent"</option>
+                        <option value="medium" data-order="2">Medium "Normal"</option>
+                        <option value="low" data-order="3">Low "trivial"</option>
+                    </select>
+                </div>
+
+                <nav>
+                    <a href="#" id="saveTask">Save task</a>    <!-- https://stackoverflow.com/questions/4855168/what-is-href-and-why-is-it-used -->
+                    <a href="#" id="clearTask">Clear task</a>
+                </nav>
+            </form>
+        </section>
+        <section>
+            <table id="tblTasks">
+                <colgroup>
+                    <col width="10%">       <!--  user id-->
+                    <col width="25%">       <!--  Name-->
+                    <col width="15%">       <!--  Due-->
+                    <col width="10%">       <!--  Category-->
+                    <col width="10%">       <!--  Priority-->
+                    <col width="30%">       <!--  Actions-->
+
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>User ID "Debugging purpose"</th>
+                        <th>Name</th>
+                        <th>Due</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <nav>
+                <a href="#" id="btnAddTask">Add task</a>
+                <a href="#" id="btnRetrieveTasks">Retrieve tasks from server</a>
+            </nav>
+        </section>
 	</main>
 	<footer>You have <span id="taskCount"></span> tasks</footer>
 </body>
@@ -103,9 +121,11 @@ if (window.indexedDB) {
 
 <script id="taskRow" type="text/x-jQuery-tmpl">
 <tr>
+    <td {{if complete == true}}class="taskCompleted"{{/if}}>${userID}</td>
 	<td {{if complete == true}}class="taskCompleted"{{/if}}>${task}</td>
 	<td {{if complete == true}}class="taskCompleted"{{/if}}><time datetime="${requiredBy}">${requiredBy}</time></td>
 	<td {{if complete == true}}class="taskCompleted"{{/if}}>${category}</td>
+	<td {{if complete == true}}class="taskCompleted"{{/if}}>${priority}</td>
 	<td>
 		<nav>
 			{{if complete != true}}			

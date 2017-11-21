@@ -6,13 +6,15 @@ public class Task {
     private String task;
     private String dueDate;
     private String category;
+    private String userId;
     private int priority;
 
-    public Task(int id, String task, String dueDate, String category, int priority) {
+    public Task(int id, String task, String dueDate, String category, String userId, int priority) {
         this.id = id;
         this.task = task;
         this.dueDate = dueDate;
         this.category = category;
+        this.userId = userId;
         this.priority = priority;
     }
 
@@ -54,5 +56,13 @@ public class Task {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

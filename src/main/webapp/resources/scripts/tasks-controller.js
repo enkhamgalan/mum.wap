@@ -54,7 +54,7 @@ tasksController = function() {
 	}
 	
 	return { 
-		init : function(page, callback) { 
+		init : function(page, callback) {
 			if (initialised) {
 				callback()
 			} else {
@@ -62,11 +62,17 @@ tasksController = function() {
 				storageEngine.init(function() {
 					storageEngine.initObjectStore('task', function() {
 						callback();
-					}, errorLogger) 
-				}, errorLogger);	 				
-				$(taskPage).find('[required="required"]').prev('label').append( '<span>*</span>').children( 'span').addClass('required');
+					}, errorLogger)
+				}, errorLogger);
+
+				$(taskPage).find('[required="required"]')
+                            .prev('label')
+                            .append( '<span>*</span>')
+                            .children( 'span')
+                            .addClass('required');
+
 				$(taskPage).find('tbody tr:even').addClass('even');
-				
+
 				$(taskPage).find('#btnAddTask').click(function(evt) {
 					evt.preventDefault();
 					$(taskPage).find('#taskCreation').removeClass('not');
@@ -78,37 +84,33 @@ tasksController = function() {
                     console.log('making ajax call');
                     retrieveTasksServer();
                 });
-				
+
 				$(taskPage).find('#tblTasks tbody').on('click', 'tr', function(evt) {
 					$(evt.target).closest('td').siblings().andSelf().toggleClass('rowHighlight');
-				});	
-				
-				$(taskPage).find('#tblTasks tbody').on('click', '.deleteRow', 
-					function(evt) { 					
-						storageEngine.delete('task', $(evt.target).data().taskId, 
-							function() {
-								$(evt.target).parents('tr').remove(); 
+				});
+
+				$(taskPage).find('#tblTasks tbody').on('click', '.deleteRow', function(evt) {
+						storageEngine.delete('task', $(evt.target).data().taskId, function() {
+								$(evt.target).parents('tr').remove();
 								taskCountChanged();
 							}, errorLogger);
-						
+
 					}
 				);
-				
-				$(taskPage).find('#tblTasks tbody').on('click', '.editRow', 
-					function(evt) { 
+
+				$(taskPage).find('#tblTasks tbody').on('click', '.editRow', function(evt) {
 						$(taskPage).find('#taskCreation').removeClass('not');
 						storageEngine.findById('task', $(evt.target).data().taskId, function(task) {
 							$(taskPage).find('form').fromObject(task);
 						}, errorLogger);
-					}
-				);
-				
+					});
+
 				$(taskPage).find('#clearTask').click(function(evt) {
 					evt.preventDefault();
 					clearTask();
 				});
-				
-				$(taskPage).find('#tblTasks tbody').on('click', '.completeRow', function(evt) { 					
+
+				$(taskPage).find('#tblTasks tbody').on('click', '.completeRow', function(evt) {
 					storageEngine.findById('task', $(evt.target).data().taskId, function(task) {
 						task.complete = true;
 						storageEngine.save('task', task, function() {
@@ -116,11 +118,11 @@ tasksController = function() {
 						},errorLogger);
 					}, errorLogger);
 				});
-				
+
 				$(taskPage).find('#saveTask').click(function(evt) {
 					evt.preventDefault();
 					if ($(taskPage).find('form').valid()) {
-						var task = $(taskPage).find('form').toObject();		
+						var task = $(taskPage).find('form').toObject();
 						storageEngine.save('task', task, function() {
 							$(taskPage).find('#tblTasks tbody').empty();
 							tasksController.loadTasks();
@@ -136,6 +138,10 @@ tasksController = function() {
 		 * 111917kl
 		 * modification of the loadTasks method to load tasks retrieved from the server
          */
+        // function(tasks) {
+        //     tasks.sort(function(o1, o2) {
+        //         return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
+        //     });
 		loadServerTasks: function(tasks) {
             $(taskPage).find('#tblTasks tbody').empty();
             $.each(tasks, function (index, task) {
@@ -151,9 +157,9 @@ tasksController = function() {
 		loadTasks : function() {
 			$(taskPage).find('#tblTasks tbody').empty();
 			storageEngine.findAll('task', function(tasks) {
-				tasks.sort(function(o1, o2) {
-					return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
-				});
+                    tasks.sort(function(o1, o2) {
+                        return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
+                    });
 				$.each(tasks, function(index, task) {
 					if (!task.complete) {
 						task.complete = false;

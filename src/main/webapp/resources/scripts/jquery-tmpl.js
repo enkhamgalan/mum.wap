@@ -9,7 +9,8 @@
  */
 (function( jQuery, undefined ){
 	var oldManip = jQuery.fn.domManip, tmplItmAtt = "_tmplitem", htmlExpr = /^[^<]*(<[\w\W]+>)[^>]*$|\{\{\! /,
-		newTmplItems = {}, wrappedItems = {}, appendToTmplItems, topTmplItem = { key: 0, data: {} }, itemKey = 0, cloneIndex = 0, stack = [];
+		newTmplItems = {}, wrappedItems = {}, appendToTmplItems, topTmplItem = { key: 0, data: {} }, itemKey = 0,
+		cloneIndex = 0, stack = [];
 
 	function newTmplItem( options, parentItem, fn, data ) {
 		// Returns a template item data structure for a new rendered instance of a template (a 'template item').
