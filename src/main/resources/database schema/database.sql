@@ -69,3 +69,22 @@ CREATE INDEX `fk_user_id_idx` ON `mydb`.`TeamMembers` (`User_id` ASC);
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO team (TeamName) VALUES ('Monster');
+INSERT INTO team (TeamName) VALUES ('Fantastic Four');
+
+INSERT INTO task (TaskName, TaskPriority, TaskDate, TaskCategory, user_UserID) VALUES ('Homework1', 1, NOW(), 'Personal', 1);
+INSERT INTO task (TaskName, TaskPriority, TaskDate, TaskCategory, user_UserID) VALUES ('Homework2', 2, NOW(), 'Personal', 2);
+INSERT INTO task (TaskName, TaskPriority, TaskDate, TaskCategory, user_UserID) VALUES ('Homework3', 3, NOW(), 'Personal', 3);
+INSERT INTO task (TaskName, TaskPriority, TaskDate, TaskCategory, user_UserID) VALUES ('Homework4', 1, NOW(), 'Personal', 4);
+
+INSERT INTO task (TaskName, TaskPriority, TaskDate, TaskCategory, user_UserID) VALUES ('Project1', 1, NOW(), 'Work', 1);
+INSERT INTO task (TaskName, TaskPriority, TaskDate, TaskCategory, user_UserID) VALUES ('Project2', 2, NOW(), 'Work', 2);
+INSERT INTO task (TaskName, TaskPriority, TaskDate, TaskCategory, user_UserID) VALUES ('Project3', 3, NOW(), 'Work', 3);
+INSERT INTO task (TaskName, TaskPriority, TaskDate, TaskCategory, user_UserID) VALUES ('Project4', 1, NOW(), 'Work', 4);
+
+INSERT INTO teammembers VALUES (1, 1);
+INSERT INTO teammembers VALUES (2, 1);
+INSERT INTO teammembers VALUES (2, 2);
+INSERT INTO teammembers VALUES (2, 3);
+INSERT INTO teammembers VALUES (2, 4);
