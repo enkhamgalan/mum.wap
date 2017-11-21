@@ -18,7 +18,7 @@ import java.io.PrintWriter;
  * Date: 2017-11-20
  * Time: 21:37
  */
-@WebServlet(name = "TeamMemberServlet", urlPatterns = {"/member"})
+@WebServlet(value = "/member")
 public class TeamMemberServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

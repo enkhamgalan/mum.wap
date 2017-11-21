@@ -18,7 +18,7 @@ import java.io.PrintWriter;
  * Date: 2017-11-20
  * Time: 19:50
  */
-@WebServlet(name = "TeamServlet", urlPatterns = {"/team"})
+@WebServlet(value = "/team")
 public class TeamServlet extends HttpServlet {
 
     @Override

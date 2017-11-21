@@ -7,7 +7,8 @@ public class DBconnector {
 
     private DBconnector() {
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useSSL=false", "eegii", "Eegii_123");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useSSL=false",
+                    "eegii", "Eegii_123");
         } catch (SQLException e) {
             e.printStackTrace();
         }
