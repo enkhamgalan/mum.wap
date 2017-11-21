@@ -119,7 +119,51 @@ public class TaskDB extends Database {
         }
         return ret;
     }
-
+    
+    public void insertTask(String query) {
+    	 try {
+             
+             PreparedStatement  ps = DBconnector.getconnector().getconnection().prepareStatement(query);
+             ps.execute();
+           
+         } catch (Exception e) {
+             e.printStackTrace();
+         }
+    	
+    }
+    public List<Task> getAlltasks(){
+        List<Task> ret = null;
+        final String sql = "SELECT * FROM task ";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            checkConn();
+            ps = preparedStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                if (ret == null) {
+                    ret = new ArrayList<>();
+                }
+                LocalDate dueDate = rs.getDate("TaskDate").toLocalDate();
+                Task task = new Task(
+                        rs.getInt("TaskID"),
+                        rs.getString("TaskName"),
+                        dueDate.toString(),
+                        rs.getString("TaskCategory"),
+                        rs.getString("user_UserID"),
+                        rs.getInt("TaskPriority")
+                );
+                ret.add(task);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(ps);
+            close(rs);
+        }
+        return ret;
+    }
+    
     public List<Task> getTaskListByUserId(Integer userId) {
         List<Task> ret = null;
         final String sql = "SELECT * FROM task WHERE user_UserID = ?";
@@ -203,7 +247,35 @@ public class TaskDB extends Database {
                 Team team = new Team();
                 team.setId(rs.getInt("TeamID"));
                 team.setName(rs.getString("TeamName"));
+                team.setTeamMemberList(getAllTeamMemberList(rs.getInt("TeamID")));
                 ret.add(team);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(ps);
+            close(rs);
+        }
+        return ret;
+    }
+
+    private List<TeamMember> getAllTeamMemberList(int teamId) {
+        List<TeamMember> ret = null;
+        final String sql = "SELECT * FROM teammembers WHERE Team_TeamID = ?";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            checkConn();
+            ps = preparedStatement(sql, teamId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                if (ret == null) {
+                    ret = new ArrayList<>();
+                }
+                TeamMember teamMember = new TeamMember();
+                teamMember.setId(rs.getInt("Team_TeamId"));
+                teamMember.setUserId(rs.getInt("User_id"));
+                ret.add(teamMember);
             }
         } catch (Exception e) {
             e.printStackTrace();

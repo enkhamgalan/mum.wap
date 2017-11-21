@@ -1,6 +1,7 @@
 package usa.edu.mum.wap.utility;
 
 import java.sql.*;
+import java.util.Enumeration;
 
 public class DBconnector {
     private Connection conn;
@@ -17,12 +18,31 @@ public class DBconnector {
 
     private static DBconnector connector = new DBconnector();
 
-    static DBconnector getconnector() {
+    public static DBconnector getconnector() {
         return connector;
     }
 
     public Connection getconnection() {
         return conn;
+    }
+
+    public void closeConnection() {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+            }
+            Enumeration<Driver> drivers = DriverManager.getDrivers();
+            Driver driver = null;
+            // clear drivers
+            while (drivers.hasMoreElements()) {
+                try {
+                    driver = drivers.nextElement();
+                    DriverManager.deregisterDriver(driver);
+                } catch (SQLException ex) {
+                }
+            }
+        } catch (Exception e) {
+        }
     }
 
     public void insertTask() {

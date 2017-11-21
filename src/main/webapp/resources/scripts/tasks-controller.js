@@ -9,17 +9,16 @@ tasksController = function () {
     var flag = true;
 
     /**
-     * makes json call to server to get task list.
-     * currently just testing this and writing return value out to console
-     * 111917kl
-     */
-    function retrieveTasksServer() {
+	 * makes json call to server to get task list. currently just testing this
+	 * and writing return value out to console 111917kl
+	 */
+	function retrieveTasksServer() {
         $.ajax("task", {
             "type": "get",
-            dataType: "json"
+			dataType: "json"
             // "data": {
-            //     "first": first,
-            //     "last": last
+            // "first": first,
+            // "last": last
             // }
         }).done(displayTasksServer.bind()); //need reference to the tasksController object
     }
@@ -43,12 +42,14 @@ tasksController = function () {
     }
 
     /**
-     * 111917kl
-     * callback for retrieveTasksServer
-     * @param data
-     */
-    function displayTasksServer(data) { //this needs to be bound to the tasksController -- used bind in retrieveTasksServer 111917kl
-        console.log(data);
+	 * 111917kl callback for retrieveTasksServer
+	 *
+	 * @param data
+	 */
+    function displayTasksServer(data) { // this needs to be bound to the
+										// tasksController -- used bind in
+										// retrieveTasksServer 111917kl
+    	console.log(data);
         tasksController.loadServerTasks(data);
     }
 
@@ -117,59 +118,83 @@ tasksController = function () {
                     }, errorLogger)
                 }, errorLogger);
 
-                $(taskPage).find('[required="required"]')
-                    .prev('label')
-                    .append('<span>*</span>')
-                    .children('span')
-                    .addClass('required');
+				$(taskPage).find('[required="required"]')
+                            .prev('label')
+                            .append( '<span>*</span>')
+                            .children( 'span')
+                            .addClass('required');
 
-                $(taskPage).find('tbody tr:even').addClass('even');
+				$(taskPage).find('tbody tr:even').addClass('even');
 
-                $(taskPage).find('#btnAddTask').click(function (evt) {
-                    evt.preventDefault();
-                    $(taskPage).find('#taskCreation').removeClass('not');
-                });
+				$(taskPage).find('#btnAddTask').click(function(evt) {
+					evt.preventDefault();
+					$(taskPage).find('#taskCreation').removeClass('not');
+				});
 
-                /**     * 11/19/17kl        */
-                $(taskPage).find('#btnRetrieveTasks').click(function (evt) {
+				$(taskPage).find('#btntoServer').click(function() {
+
+
+					storageEngine.findAll('task', function(tasks) {
+
+					$.each(tasks, function(index, task) {
+						console.log(JSON.stringify(task));
+
+						$.ajax("task", {
+						 type: "post",
+						 data: JSON.stringify(task),
+						 contentType: "application/json",
+						 dataType: "json"
+
+			        }).done(displayTasksServer.bind());
+
+					});
+				}, errorLogger);
+
+
+				});
+
+
+                /** * 11/19/17kl */
+                $(taskPage).find('#btnRetrieveTasks').click(function(evt) {
                     evt.preventDefault();
                     console.log('making ajax call');
                     retrieveTasksServer();
                     $('#filterSection').removeClass('taskNot');
                 });
 
-                $(taskPage).find('#tblTasks tbody').on('click', 'tr', function (evt) {
-                    $(evt.target).closest('td').siblings().andSelf().toggleClass('rowHighlight');
-                });
+				$(taskPage).find('#tblTasks tbody').on('click', 'tr', function(evt) {
+					$(evt.target).closest('td').siblings().andSelf().toggleClass('rowHighlight');
+				});
 
-                $(taskPage).find('#tblTasks tbody').on('click', '.deleteRow', function (evt) {
-                        storageEngine.delete('task', $(evt.target).data().taskId, function () {
-                            $(evt.target).parents('tr').remove();
-                            taskCountChanged();
-                        }, errorLogger);
-                    }
-                );
+				$(taskPage).find('#tblTasks tbody').on('click', '.deleteRow', function(evt) {
+						storageEngine.delete('task', $(evt.target).data().taskId, function() {
+								$(evt.target).parents('tr').remove();
+								taskCountChanged();
+							}, errorLogger);
 
-                $(taskPage).find('#tblTasks tbody').on('click', '.editRow', function (evt) {
-                    $(taskPage).find('#taskCreation').removeClass('not');
-                    storageEngine.findById('task', $(evt.target).data().taskId, function (task) {
-                        $(taskPage).find('form').fromObject(task);
-                    }, errorLogger);
-                });
+					}
+				);
 
-                $(taskPage).find('#clearTask').click(function (evt) {
-                    evt.preventDefault();
-                    clearTask();
-                });
+				$(taskPage).find('#tblTasks tbody').on('click', '.editRow', function(evt) {
+						$(taskPage).find('#taskCreation').removeClass('not');
+						storageEngine.findById('task', $(evt.target).data().taskId, function(task) {
+							$(taskPage).find('form').fromObject(task);
+						}, errorLogger);
+					});
 
-                $(taskPage).find('#tblTasks tbody').on('click', '.completeRow', function (evt) {
-                    storageEngine.findById('task', $(evt.target).data().taskId, function (task) {
-                        task.complete = true;
-                        storageEngine.save('task', task, function () {
-                            tasksController.loadTasks();
-                        }, errorLogger);
-                    }, errorLogger);
-                });
+				$(taskPage).find('#clearTask').click(function(evt) {
+					evt.preventDefault();
+					clearTask();
+				});
+
+				$(taskPage).find('#tblTasks tbody').on('click', '.completeRow', function(evt) {
+					storageEngine.findById('task', $(evt.target).data().taskId, function(task) {
+						task.complete = true;
+						storageEngine.save('task', task, function() {
+							tasksController.loadTasks();
+						},errorLogger);
+					}, errorLogger);
+				});
 
 
                 /////// Edits by Ramy Badawy
@@ -185,10 +210,8 @@ tasksController = function () {
                     if ($(taskPage).find('form').valid()) {
                         var task = $(taskPage).find('form').toObject();
 
-                        // starting edits
                         let sel = $(taskPage).find('#priorityID option:selected').data("order");
                         task.order = sel;
-                        console.log(task);
                         // ending edits
 
                         storageEngine.save('task', task, function () {
@@ -260,7 +283,8 @@ tasksController = function () {
                 $('#taskRow').tmpl(task).appendTo($(taskPage).find('#tblTasks tbody'));
                 taskCountChanged();
                 console.log('about to render table with server tasks');
-                //renderTable(); --skip for now, this just sets style class for overdue tasks 111917kl
+                // renderTable(); --skip for now, this just sets style class for
+				// overdue tasks 111917kl
             });
         },
 
