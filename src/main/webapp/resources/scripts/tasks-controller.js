@@ -302,6 +302,7 @@ tasksController = function () {
                 $('#userId_' + id).val('');
                 loadTeams();
             }).fail(function (xhr, status, exception) {
+                alert(xhr.responseText);
                 console.log(xhr, status, exception);
             });
         }
