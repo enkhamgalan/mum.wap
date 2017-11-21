@@ -131,13 +131,11 @@ public class TaskDB extends Database {
                 if (ret == null) {
                     ret = new ArrayList<>();
                 }
-                LocalDate localDate = rs.getDate("TaskDate").toLocalDate();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mm/dd/yyyy");
-                String dueDate = localDate.format(formatter);
+                LocalDate dueDate = rs.getDate("TaskDate").toLocalDate();
                 Task task = new Task(
                         rs.getInt("TaskID"),
                         rs.getString("TaskName"),
-                        dueDate,
+                        dueDate.toString(),
                         rs.getString("TaskCategory"),
                         rs.getString("user_UserID"),
                         rs.getInt("TaskPriority")
@@ -167,13 +165,11 @@ public class TaskDB extends Database {
                 if (ret == null) {
                     ret = new ArrayList<>();
                 }
-                LocalDate localDate = rs.getDate("TaskDate").toLocalDate();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mm/dd/yyyy");
-                String dueDate = localDate.format(formatter);
+                LocalDate dueDate = rs.getDate("TaskDate").toLocalDate();
                 Task task = new Task(
                         rs.getInt("TaskID"),
                         rs.getString("TaskName"),
-                        dueDate,
+                        dueDate.toString(),
                         rs.getString("TaskCategory"),
                         rs.getString("user_UserID"),
                         rs.getInt("TaskPriority")

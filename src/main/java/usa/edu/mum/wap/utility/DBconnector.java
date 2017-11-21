@@ -7,9 +7,10 @@ public class DBconnector {
 
     private DBconnector() {
         try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useSSL=false",
                     "eegii", "Eegii_123");
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
