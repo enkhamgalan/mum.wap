@@ -8,7 +8,8 @@
 		"dfa7184b-831e-0c2a-92af-42dba77a81ca",
 		"c3320e33-bf8d-0c88-12d0-d0a40e529835",
 		"0a10a119-d6f1-19ad-d137-6961f0520685",
-		"75a0e724-f956-d33f-d3a3-1cd19e5a4182"
+		"75a0e724-f956-d33f-d3a3-1cd19e5a4182",
+		"51469674-6e43-a91a-215b-ec96dcbc74f0"
 	],
 	"folders": [],
 	"folders_order": [],
@@ -37,6 +38,27 @@
 			"collectionId": "f79de8b5-0952-7324-9706-66f332c40b4d",
 			"responses": [],
 			"rawModeData": "{\n    \"name\": \"Test333\",\n    \"id\": 7\n}"
+		},
+		{
+			"id": "51469674-6e43-a91a-215b-ec96dcbc74f0",
+			"headers": "",
+			"headerData": [],
+			"url": "http://localhost:8080/team",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1511281633086,
+			"name": "get all team",
+			"description": "",
+			"collectionId": "f79de8b5-0952-7324-9706-66f332c40b4d",
+			"responses": []
 		},
 		{
 			"id": "5272261f-b165-a903-af43-785d6d128910",

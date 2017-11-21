@@ -1,6 +1,7 @@
 package usa.edu.mum.wap.utility;
 
 import java.sql.*;
+import java.util.Enumeration;
 
 public class DBconnector {
     private Connection conn;
@@ -9,7 +10,7 @@ public class DBconnector {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useSSL=false",
-                    "root", "root");
+                    "eegii", "Eegii_123");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -17,7 +18,7 @@ public class DBconnector {
 
     private static DBconnector connector = new DBconnector();
 
-    static DBconnector getconnector() {
+    public static DBconnector getconnector() {
         return connector;
     }
 
@@ -25,7 +26,32 @@ public class DBconnector {
         return conn;
     }
 
-  
+    public void closeConnection() {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+            }
+            Enumeration<Driver> drivers = DriverManager.getDrivers();
+            Driver driver = null;
+            // clear drivers
+            while (drivers.hasMoreElements()) {
+                try {
+                    driver = drivers.nextElement();
+                    DriverManager.deregisterDriver(driver);
+                } catch (SQLException ex) {
+                }
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    public void insertTask() {
+        //   Statement statement = conn.createStatement();
+    }
+
+    public static void main(String[] args) {
+        getconnector().getconnection();
+    }
 
 
 }

@@ -2,6 +2,7 @@ package usa.edu.mum.wap.controller;
 
 import com.google.gson.Gson;
 import usa.edu.mum.wap.model.Team;
+import usa.edu.mum.wap.utility.DBconnector;
 import usa.edu.mum.wap.utility.TaskDB;
 
 import javax.servlet.ServletException;
@@ -9,9 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * User: Enkh A Erdenebat
@@ -20,6 +21,23 @@ import java.io.PrintWriter;
  */
 @WebServlet(value = "/team")
 public class TeamServlet extends HttpServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        PrintWriter out = response.getWriter();
+        try {
+            TaskDB taskDB = new TaskDB();
+            Gson gson = new Gson();
+            List<Team> teamList = taskDB.getAllTeamList();
+            out.write(gson.toJson(teamList));
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.write(e.getMessage());
+        }
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -89,5 +107,12 @@ public class TeamServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             out.write(e.getMessage());
         }
+    }
+
+    @Override
+    public void destroy() {
+        DBconnector.getconnector().closeConnection();
+        System.out.println("TeamServlet is destroying");
+        super.destroy();
     }
 }
