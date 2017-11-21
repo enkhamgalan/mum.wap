@@ -17,12 +17,21 @@ public class DBconnector {
 
     private static DBconnector connector = new DBconnector();
 
-    static DBconnector getconnector() {
+    public static DBconnector getconnector() {
         return connector;
     }
 
     public Connection getconnection() {
         return conn;
+    }
+
+    public void closeConnection() {
+        try {
+            if (conn != null && !conn.isClosed()) {
+                conn.close();
+            }
+        } catch (Exception e) {
+        }
     }
 
     public void insertTask() {

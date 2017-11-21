@@ -3,6 +3,7 @@ package usa.edu.mum.wap.controller;
 import com.google.gson.Gson;
 import usa.edu.mum.wap.model.Team;
 import usa.edu.mum.wap.model.TeamMember;
+import usa.edu.mum.wap.utility.DBconnector;
 import usa.edu.mum.wap.utility.TaskDB;
 
 import javax.servlet.ServletException;
@@ -37,5 +38,11 @@ public class TeamMemberServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             out.write(e.getMessage());
         }
+    }
+
+    @Override
+    public void destroy() {
+        DBconnector.getconnector().closeConnection();
+        System.out.println("TaskServlet was destroying");
     }
 }
