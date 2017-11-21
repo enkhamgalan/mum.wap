@@ -72,7 +72,6 @@ tasksController = function () {
     }
 
     function loadTeams() {
-
         $.ajax('team', {
             "type": "GET",
         }).done(function (jdata) {
@@ -82,6 +81,13 @@ tasksController = function () {
                 let td1 = $('<td>').append(team.id);
                 let td2 = $('<td>').append(team.name);
                 let td3 = $('<td>');
+                $.each(team.teamMemberList, function (index, member) {
+                    let span = $('<span>', {
+                        'text': member.userId + ", "
+                    })
+                    td3.append(span);
+                })
+                let td4 = $('<td>');
                 let nav = $('<nav>')
                     .append($('<a>', {
                         'href': '#',
@@ -103,8 +109,8 @@ tasksController = function () {
                         'onclick': 'tasksController.joinTeam(' + team.id + ')',
                         'text': 'Join'
                     }));
-                td3.append(nav);
-                tr.append(td1).append(td2).append(td3);
+                td4.append(nav);
+                tr.append(td1).append(td2).append(td3).append(td4);
                 $(taskPage).find('#tblTeams tbody').append(tr);
                 console.log('about to render table with server teams');
             });
