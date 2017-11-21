@@ -90,6 +90,13 @@ tasksController = function () {
                         'text': 'Delete'
                     }))
                     .append(' ')
+                    .append($('<input>').attr({
+                        'type': 'text',
+                        'size': '4',
+                        'placeHolder': 'user id',
+                        'id': 'userId_' + team.id
+                    }))
+                    .append(' ')
                     .append($('<a>', {
                         'href': '#',
                         'class': 'joinBtnTeam',
@@ -275,7 +282,22 @@ tasksController = function () {
             });
         },
         joinTeam: function (id) {
-            alert(id);
+            let userId = $('#userId_' + id).val();
+            let sendInfo = {
+                'id': id,
+                'userId': userId
+            };
+            $.ajax('member', {
+                'type': 'POST',
+                dataType: "text",
+                data: JSON.stringify(sendInfo),
+                contentType: "application/json; charset=utf-8"
+            }).done(function (data) {
+                $('#userId_' + id).val('');
+                loadTeams();
+            }).fail(function (xhr, status, exception) {
+                console.log(xhr, status, exception);
+            });
         }
     }
 }();
