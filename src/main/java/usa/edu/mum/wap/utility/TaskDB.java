@@ -187,4 +187,31 @@ public class TaskDB extends Database {
         return ret;
     }
 
+    public List<Team> getAllTeamList() {
+        List<Team> ret = null;
+        final String sql = "SELECT * FROM team";
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            checkConn();
+            ps = preparedStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                if (ret == null) {
+                    ret = new ArrayList<>();
+                }
+                Team team = new Team();
+                team.setId(rs.getInt("TeamID"));
+                team.setName(rs.getString("TeamName"));
+                ret.add(team);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(ps);
+            close(rs);
+        }
+        return ret;
+    }
+
 }
