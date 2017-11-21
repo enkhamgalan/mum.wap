@@ -36,7 +36,7 @@ CREATE INDEX `UserID` ON `mydb`.`Task` (`user_UserID` ASC);
 -- Table `mydb`.`Team`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Team` (
-  `TeamName` VARCHAR(200) NULL DEFAULT CURRENT_TIMESTAMP,
+  `TeamName` VARCHAR(200) NULL,
   `TeamID` INT NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`TeamID`));
 
