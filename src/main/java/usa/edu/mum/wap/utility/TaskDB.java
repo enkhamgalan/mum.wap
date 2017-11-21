@@ -51,10 +51,12 @@ public class TaskDB extends Database {
         PreparedStatement ps = null;
         try {
             checkConn();
-            ps = preparedStatement(Statement.RETURN_GENERATED_KEYS, sql, team.getId());
+            ps = preparedStatement(Statement.RETURN_GENERATED_KEYS, sql, team.getName());
             if (ps.executeUpdate() > 0) {
                 ResultSet rs = ps.getGeneratedKeys();
-                ret = rs.getInt(1);
+                if (rs.next()) {
+                    ret = rs.getInt(1);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

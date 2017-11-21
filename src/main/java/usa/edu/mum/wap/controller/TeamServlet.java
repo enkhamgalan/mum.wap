@@ -57,7 +57,7 @@ public class TeamServlet extends HttpServlet {
             if (taskDB.deleteTeam(team)) {
                 response.setStatus(HttpServletResponse.SC_OK);
             } else {
-                response.setStatus(HttpServletResponse.SC_OK);
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 out.write("Failed to delete the team.");
             }
         } catch (NullPointerException npe) {
