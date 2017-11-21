@@ -27,7 +27,7 @@ tasksController = function () {
         $.ajax("task", {
             "type": "get",
             "data": {
-                 "teamId": teamId,
+                "teamId": teamId,
             }
         }).done(displayTasksServer.bind()); //need reference to the tasksController object
     }
@@ -73,38 +73,35 @@ tasksController = function () {
 
     function loadTeams() {
 
-        // $.ajax('team', {
-        //     "type": "GET",
-        //     "dataType": "json"
-        // }).done(function (data) {
-        let sdata = '[{ "TeamName": "First Team", "TeamID": 1 },{ "TeamName": "Second Team", "TeamID": 2 },{ "TeamName": "Third Team", "TeamID": 3 }]';
-        let jdata = JSON.parse(sdata);
-        $(taskPage).find('#tblTeams tbody').empty();
-        $.each(jdata, function (index, team) {
-            let tr = $('<tr>');
-            let td1 = $('<td>').append(team.TeamID);
-            let td2 = $('<td>').append(team.TeamName);
-            let td3 = $('<td>');
-            let nav = $('<nav>')
-                .append($('<a>', {
-                    'href': '#',
-                    'class': 'deleteBtnTeam',
-                    'onclick': 'tasksController.deleteTeam(' + team.TeamID + ')',
-                    'text': 'Delete'
-                }))
-                .append(' ')
-                .append($('<a>', {
-                    'href': '#',
-                    'class': 'joinBtnTeam',
-                    'onclick': 'tasksController.joinTeam(' + team.TeamID + ')',
-                    'text': 'Join'
-                }));
-            td3.append(nav);
-            tr.append(td1).append(td2).append(td3);
-            $(taskPage).find('#tblTeams tbody').append(tr);
-            console.log('about to render table with server teams');
+        $.ajax('team', {
+            "type": "GET",
+        }).done(function (jdata) {
+            $(taskPage).find('#tblTeams tbody').empty();
+            $.each(jdata, function (index, team) {
+                let tr = $('<tr>');
+                let td1 = $('<td>').append(team.id);
+                let td2 = $('<td>').append(team.name);
+                let td3 = $('<td>');
+                let nav = $('<nav>')
+                    .append($('<a>', {
+                        'href': '#',
+                        'class': 'deleteBtnTeam',
+                        'onclick': 'tasksController.deleteTeam(' + team.id + ')',
+                        'text': 'Delete'
+                    }))
+                    .append(' ')
+                    .append($('<a>', {
+                        'href': '#',
+                        'class': 'joinBtnTeam',
+                        'onclick': 'tasksController.joinTeam(' + team.id + ')',
+                        'text': 'Join'
+                    }));
+                td3.append(nav);
+                tr.append(td1).append(td2).append(td3);
+                $(taskPage).find('#tblTeams tbody').append(tr);
+                console.log('about to render table with server teams');
+            });
         });
-        // });
     }
 
     return {
@@ -194,12 +191,14 @@ tasksController = function () {
 
                 $(taskPage).find('#btnAddTeam').click(function () {
                     let teamName = $('#teamName').val();
+                    let sendInfo = {
+                        'name': teamName
+                    };
                     $.ajax('team', {
                         'type': 'POST',
                         dataType: "json",
-                        'data': {
-                            'name': teamName
-                        }
+                        data: JSON.stringify(sendInfo),
+                        contentType: "application/json; charset=utf-8"
                     }).done(function (data) {
                         $('#teamName').val('');
                         loadTeams();
@@ -212,12 +211,12 @@ tasksController = function () {
                 });
 
                 $(taskPage).find('#btnFilterUserId').click(function () {
-                   let userId = $('#userIdFilter').val();
-                   $.get('task', {
-                       'userId': userId
-                   }).done(function (data) {
-                       retrieveTasksServerByUserId(data);
-                   });
+                    let userId = $('#userIdFilter').val();
+                    $.get('task', {
+                        'userId': userId
+                    }).done(function (data) {
+                        retrieveTasksServerByUserId(data);
+                    });
                 });
 
                 $(taskPage).find('#btnFilterTeamId').click(function () {
