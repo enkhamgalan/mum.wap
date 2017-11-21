@@ -6,6 +6,7 @@ tasksController = function () {
 
     var taskPage;
     var initialised = false;
+    var flag = true;
 
     /**
      * makes json call to server to get task list.
@@ -59,7 +60,7 @@ tasksController = function () {
     function clearTask() {
         $(taskPage).find('form').fromObject({});
     }
-
+///////////////////////////////////////////////////
     function renderTable() {
         $.each($(taskPage).find('#tblTasks tbody tr'), function (idx, row) {
             var due = Date.parse($(row).find('[datetime]').text());
@@ -170,10 +171,26 @@ tasksController = function () {
                     }, errorLogger);
                 });
 
+
+                /////// Edits by Ramy Badawy
+                $(taskPage).find('#prioritySort').click(function(evt){
+                    console.log(this);
+                    flag = false;
+                    tasksController.loadTasks();
+                });
+
+
                 $(taskPage).find('#saveTask').click(function (evt) {
                     evt.preventDefault();
                     if ($(taskPage).find('form').valid()) {
                         var task = $(taskPage).find('form').toObject();
+
+                        // starting edits
+                        let sel = $(taskPage).find('#priorityID option:selected').data("order");
+                        task.order = sel;
+                        console.log(task);
+                        // ending edits
+
                         storageEngine.save('task', task, function () {
                             $(taskPage).find('#tblTasks tbody').empty();
                             tasksController.loadTasks();
@@ -234,10 +251,6 @@ tasksController = function () {
          * 111917kl
          * modification of the loadTasks method to load tasks retrieved from the server
          */
-        // function(tasks) {
-        //     tasks.sort(function(o1, o2) {
-        //         return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
-        //     });
         loadServerTasks: function (tasks) {
             $(taskPage).find('#tblTasks tbody').empty();
             $.each(tasks, function (index, task) {
@@ -250,12 +263,17 @@ tasksController = function () {
                 //renderTable(); --skip for now, this just sets style class for overdue tasks 111917kl
             });
         },
+
         loadTasks: function () {
             $(taskPage).find('#tblTasks tbody').empty();
+
             storageEngine.findAll('task', function (tasks) {
+                //console.log(tasks);
                 tasks.sort(function (o1, o2) {
-                    //return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
-                    return o1.priority > o2.priority;
+                    if(flag)
+                        return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
+                    else
+                        return o1.priority > o2.priority;
                 });
                 $.each(tasks, function (index, task) {
                     if (!task.complete) {
