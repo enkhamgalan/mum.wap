@@ -1,6 +1,7 @@
 storageEngine = function() {
 	var initialized = false;
 	var initializedObjectStores = {};
+
 	function getStorageObject(type) {
 	    var item = localStorage.getItem(type); 
 	    var parsedItem = JSON.parse(item); 

@@ -5,6 +5,7 @@
     <title>Task list</title>
     <link rel="stylesheet" type="text/css" href="resources/styles/tasks.css" media="screen"/>
     <script src="resources/scripts/jquery-2.0.3.js"></script>
+    <script src="resources/scripts/jquery.dataTables.min.js"></script>
     <script src="resources/scripts/jquery-tmpl.js"></script>
     <script src="resources/scripts/jquery.validate.js"></script>
     <script src="resources/scripts/jquery-serialization.js"></script>
@@ -48,10 +49,10 @@
 
             <div>
                 <label>Level of Priority:</label>
-                <select name="priority">
-                    <option value="high" data-order="1" selected>High "Urgent"</option>
-                    <option value="medium" data-order="2">Medium "Normal"</option>
-                    <option value="low" data-order="3">Low "trivial"</option>
+                <select ID="priorityID" name="priority">
+                    <option value="1" data-order="high" selected>High "Urgent"</option>
+                    <option value="2" data-order="medium">Medium "Normal"</option>
+                    <option value="3" data-order="low">Low "trivial"</option>
                 </select>
             </div>
 
@@ -72,24 +73,32 @@
     </section>
     <section>
         <table id="tblTasks">
+
             <colgroup>
-                <col width="10%">       <!--  user id-->
+                <col width="5%">       <!--  user id-->
                 <col width="25%">       <!--  Name-->
                 <col width="15%">       <!--  Due-->
                 <col width="10%">       <!--  Category-->
-                <col width="10%">       <!--  Priority-->
+                <col width="15%">       <!--  Priority-->
                 <col width="30%">       <!--  Actions-->
             </colgroup>
+
             <thead>
             <tr>
                 <th>User ID "Debugging purpose"</th>
                 <th>Name</th>
                 <th>Due</th>
                 <th>Category</th>
-                <th>Priority</th>
+                <th>Priority
+                    <div id="prioritySort" class="inline2">
+                        <div class="arrow-up"></div>
+                        <div class="arrow-down"></div>
+                    </div>
+                </th>
                 <th>Actions</th>
             </tr>
             </thead>
+
             <tbody>
             </tbody>
         </table>
@@ -101,6 +110,7 @@
         <br>
         <hr size="1"/>
     </section>
+
     <!--SDIMPL-->
     <section id="teamCreation" class="teamNot">
         <nav>
@@ -165,7 +175,7 @@
 	<td {{if complete == true}}class="taskCompleted"{{/if}}>${task}</td>
 	<td {{if complete == true}}class="taskCompleted"{{/if}}><time datetime="${requiredBy}">${requiredBy}</time></td>
 	<td {{if complete == true}}class="taskCompleted"{{/if}}>${category}</td>
-	<td {{if complete == true}}class="taskCompleted"{{/if}}>${priority}</td>
+	<td {{if complete == true}}class="taskCompleted"{{/if}}>${order}</td>
 	<td>
 		<nav>
 			{{if complete != true}}			

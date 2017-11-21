@@ -140,3 +140,30 @@ label.error {
 .taskCompleted {
     text-decoration: line-through;
 }
+
+.arrow-up {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+
+    border-bottom: 10px solid white;
+    margin-bottom: 2px;
+}
+
+.arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+
+    border-top: 10px solid white;
+}
+
+div.inline2{
+    display: inline-block;
+    margin-left: 10px;
+    overflow: hidden;
+    vertical-align: middle;
+    cursor: pointer;
+}
