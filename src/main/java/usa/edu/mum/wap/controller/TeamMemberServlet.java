@@ -43,6 +43,7 @@ public class TeamMemberServlet extends HttpServlet {
     @Override
     public void destroy() {
         DBconnector.getconnector().closeConnection();
-        System.out.println("TaskServlet was destroying");
+        System.out.println("TeamMemberServlet was destroying");
+        super.destroy();
     }
 }

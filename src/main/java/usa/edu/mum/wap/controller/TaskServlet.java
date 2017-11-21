@@ -55,5 +55,6 @@ public class TaskServlet extends HttpServlet {
     public void destroy() {
         DBconnector.getconnector().closeConnection();
         System.out.println("TaskServlet was destroying");
+        super.destroy();
     }
 }
