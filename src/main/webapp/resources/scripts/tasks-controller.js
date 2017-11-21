@@ -1,5 +1,5 @@
 tasksController = function() { 
-	
+	console.log(window);
 	function errorLogger(errorCode, errorMessage) {
 		console.log(errorCode +':'+ errorMessage);
 	}
@@ -8,27 +8,29 @@ tasksController = function() {
 	var initialised = false;
 
     /**
-	 * makes json call to server to get task list.
-	 * currently just testing this and writing return value out to console
-	 * 111917kl
-     */
+	 * makes json call to server to get task list. currently just testing this
+	 * and writing return value out to console 111917kl
+	 */
 	function retrieveTasksServer() {
         $.ajax("TaskServlet", {
             "type": "get",
 			dataType: "json"
             // "data": {
-            //     "first": first,
-            //     "last": last
+            // "first": first,
+            // "last": last
             // }
-        }).done(displayTasksServer.bind()); //need reference to the tasksController object
+        }).done(displayTasksServer.bind()); // need reference to the
+											// tasksController object
     }
 
     /**
-	 * 111917kl
-	 * callback for retrieveTasksServer
-     * @param data
-     */
-    function displayTasksServer(data) { //this needs to be bound to the tasksController -- used bind in retrieveTasksServer 111917kl
+	 * 111917kl callback for retrieveTasksServer
+	 * 
+	 * @param data
+	 */
+    function displayTasksServer(data) { // this needs to be bound to the
+										// tasksController -- used bind in
+										// retrieveTasksServer 111917kl
     	console.log(data);
         tasksController.loadServerTasks(data);
     }
@@ -77,8 +79,31 @@ tasksController = function() {
 					evt.preventDefault();
 					$(taskPage).find('#taskCreation').removeClass('not');
 				});
+				
+				$(taskPage).find('#btntoServer').click(function() {
+					
+				
+					storageEngine.findAll('task', function(tasks) {
+	                  
+					$.each(tasks, function(index, task) {
+						console.log(JSON.stringify(task));
+						
+						$.ajax("TaskServlet", {
+						 type: "post",
+						 data: JSON.stringify(task),
+						 contentType: "application/json",
+						 dataType: "json"
+						    	
+			        }).done(displayTasksServer.bind()); 
+						
+					});
+				}, errorLogger);
+					
+					
+				});
 
-                /**	 * 11/19/17kl        */
+
+                /** * 11/19/17kl */
                 $(taskPage).find('#btnRetrieveTasks').click(function(evt) {
                     evt.preventDefault();
                     console.log('making ajax call');
@@ -135,13 +160,14 @@ tasksController = function() {
 			}
 		},
         /**
-		 * 111917kl
-		 * modification of the loadTasks method to load tasks retrieved from the server
-         */
+		 * 111917kl modification of the loadTasks method to load tasks retrieved
+		 * from the server
+		 */
         // function(tasks) {
-        //     tasks.sort(function(o1, o2) {
-        //         return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
-        //     });
+        // tasks.sort(function(o1, o2) {
+        // return
+		// Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
+        // });
 		loadServerTasks: function(tasks) {
             $(taskPage).find('#tblTasks tbody').empty();
             $.each(tasks, function (index, task) {
@@ -151,14 +177,16 @@ tasksController = function() {
                 $('#taskRow').tmpl(task).appendTo($(taskPage).find('#tblTasks tbody'));
                 taskCountChanged();
                 console.log('about to render table with server tasks');
-                //renderTable(); --skip for now, this just sets style class for overdue tasks 111917kl
+                // renderTable(); --skip for now, this just sets style class for
+				// overdue tasks 111917kl
             });
 		},
 		loadTasks : function() {
 			$(taskPage).find('#tblTasks tbody').empty();
 			storageEngine.findAll('task', function(tasks) {
                     tasks.sort(function(o1, o2) {
-                        //return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
+                        // return
+						// Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
                         return o1.priority > o2.priority;
                     });
 				$.each(tasks, function(index, task) {

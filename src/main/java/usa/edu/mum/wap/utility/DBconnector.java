@@ -9,7 +9,7 @@ public class DBconnector {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb?useSSL=false",
-                    "eegii", "Eegii_123");
+                    "root", "root");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -25,13 +25,7 @@ public class DBconnector {
         return conn;
     }
 
-    public void insertTask() {
-        //   Statement statement = conn.createStatement();
-    }
-
-    public static void main(String[] args) {
-        getconnector().getconnection();
-    }
+  
 
 
 }

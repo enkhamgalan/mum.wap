@@ -5,13 +5,13 @@ import usa.edu.mum.wap.model.Team;
 
 public class Helper {
 
-    public String insertTask(Task task){
-        return "INSERT INTO task (TaskName,TaskPriority,TaskDate,TaskCategory,UserID)  " + "VALUES ("
+    public static String insertTask(Task task){
+        return "INSERT INTO task (TaskName,TaskPriority,TaskDate,TaskCategory,user_UserID)  " + "VALUES ("
         		+'"'+task.getTask()+'"'+","
         		+'"'+task.getPriority()+'"'+","
         		+'"'+task.getDueDate()+'"'+","
         		+'"'+task.getCategory()+'"'+","
-        		+'"'+task.getUserID()+'"'+")";
+        		+'"'+task.getUserId()+'"'+")";
     }
 
     public String retrieveTask(int userID){
@@ -27,8 +27,5 @@ public class Helper {
     }
 
 
-    /*public String insertTeam(Team team){
-        return    "'INSERT INTO team (TeamName)  " + "VALUES ("+team.getTeamName()+")'";
-    }*/
 
 }
