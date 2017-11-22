@@ -131,6 +131,28 @@ public class TaskDB extends Database {
          }
     	
     }
+
+
+    public boolean checkTask(PreparedStatement query){
+        List<Task> ret = null;
+        boolean result = false;
+        ResultSet rs = null;
+        try {
+            checkConn();
+            rs = query.executeQuery();
+            if(rs.first()){
+                result = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //close(rs);
+        }
+        return result;
+    }
+
+
+
     public List<Task> getAlltasks(){
         List<Task> ret = null;
         final String sql = "SELECT * FROM task ";
