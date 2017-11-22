@@ -387,20 +387,13 @@ tasksController = function () {
                 });
                 $.each(teams, function (index, team) {
                     console.log("index is " + index + " Key is " + team.id + " Team name is " + team.teamname);
-                    // let tr = $('<tr>');
-                    // let td1 = $('<td>').append(team.id);
-                    // let td2 = $('<td>').append(team.teamname);
-                    // tr.append(td1).append(td2);
-                    // $(taskPage).find('#tblTeams tbody').append(tr);
-
                     $('#teamRow').tmpl(team).appendTo($(taskPage).find('#tblTeams tbody'));
-
                     // taskCountChanged();
                     // renderTable();
                 });
             }, errorLogger);
         },
-
+        //SD IMPL START
         deleteTeam: function (id) {
             $.ajax('team?id=' + id, {
                 'type': 'DELETE'
@@ -427,5 +420,6 @@ tasksController = function () {
                 console.log(xhr, status, exception);
             });
         }
+        //SD IMPL END
     }
 }();
