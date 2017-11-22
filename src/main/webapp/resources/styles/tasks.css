@@ -172,3 +172,9 @@ div.inline2{
     cursor: pointer;
     text-align: left;
 }
+
+.msg{
+	color:red;
+	font-weight:bold;
+	font-size:10pt;
+}
