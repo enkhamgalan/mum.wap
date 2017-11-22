@@ -2,6 +2,7 @@ package usa.edu.mum.wap.controller;
 
 import com.google.gson.Gson;
 import usa.edu.mum.wap.model.Task;
+import usa.edu.mum.wap.utility.Config;
 import usa.edu.mum.wap.utility.DBconnector;
 import usa.edu.mum.wap.utility.Helper;
 import usa.edu.mum.wap.utility.TaskDB;
@@ -19,23 +20,23 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet(value = "/task")
 public class TaskServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	System.out.println("TEST");
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String msg = "";
 
-
-PrintWriter out = response.getWriter();
-
+        PrintWriter out = response.getWriter();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
         String json = "";
-        if(br != null){
+        if (br != null) {
             json = br.readLine();
         }
-
 
         Helper helper = new Helper();
         JSONObject jsonObj = null;
@@ -46,28 +47,45 @@ PrintWriter out = response.getWriter();
         }
 
         Task task = null;
+        TaskDB db = new TaskDB();
+        PreparedStatement query = null;
         try {
-            task = new Task(0,
-                    jsonObj.getString("task"),
-                    jsonObj.getString("requiredBy"),
-                    jsonObj.getString("category"),
-                    jsonObj.getString("userID"),
-                    Integer.parseInt(jsonObj.getString("priority")));
 
-            TaskDB db = new TaskDB();
-            db.insertTask(helper.insertTask(task));
+            String select = " TaskName=? and TaskDate = ? and TaskCategory = ? and user_UserID = ? and TaskPriority =? ";
+            try {
+                System.out.println(helper.selectTasks(select));
+                query = DBconnector.getconnector().getconnection().prepareStatement(helper.selectTasks(select));
+                query.setString(1, jsonObj.getString("task"));
+                query.setString(2, jsonObj.getString("requiredBy"));
+                query.setString(3, jsonObj.getString("category"));
+                query.setString(4, jsonObj.getString("userID"));
+                query.setString(5, jsonObj.getString("priority"));
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (!db.checkTask(query)) {
+                task = new Task(0, jsonObj.getString("task"), jsonObj.getString("requiredBy"),
+                        jsonObj.getString("category"), jsonObj.getString("userID"),
+                        Integer.parseInt(jsonObj.getString("priority")));
+                db.insertTask(helper.insertTask(task));
+
+                msg = "Task inserted";
+
+            } else {
+                msg = "there are tasks already saved!";
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println(helper.insertTask(task));
-    			response.setStatus(HttpServletResponse.SC_OK);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
 
 
+        out.print(msg);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         try {
             TaskDB taskDB = new TaskDB();
@@ -103,5 +121,11 @@ PrintWriter out = response.getWriter();
         DBconnector.getconnector().closeConnection();
         System.out.println("TaskServlet was destroying");
         super.destroy();
+    }
+
+    @Override
+    public void init() throws ServletException {
+        Config.loadConfig();
+        super.init();
     }
 }

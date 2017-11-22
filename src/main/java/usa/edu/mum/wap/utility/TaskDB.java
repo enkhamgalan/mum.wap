@@ -8,7 +8,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +17,6 @@ import java.util.List;
  * Time: 21:15
  */
 public class TaskDB extends Database {
-
-    private String url;
-    private String username;
-    private String password;
-
-    public TaskDB(String url, String username, String password) {
-        super();
-        this.url = url;
-        this.username = username;
-        this.password = password;
-    }
 
     public TaskDB() {
         super();
@@ -66,12 +54,31 @@ public class TaskDB extends Database {
         return ret;
     }
 
+    private boolean deleteTeamMember(Integer id) {
+        boolean ret = false;
+        final String sql = "DELETE FROM teammembers WHERE Team_TeamID = ?";
+        PreparedStatement ps = null;
+        try {
+            checkConn();
+            ps = preparedStatement(sql, id);
+            if (ps.executeUpdate() > 0) {
+                ret = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            close(ps);
+        }
+        return ret;
+    }
+
     public boolean deleteTeam(Team team) {
         boolean ret = false;
         final String sql = "DELETE FROM team WHERE TeamID = ?";
         PreparedStatement ps = null;
         try {
             checkConn();
+            deleteTeamMember(team.getId());
             ps = preparedStatement(sql, team.getId());
             if (ps.executeUpdate() > 0) {
                 ret = true;
@@ -119,19 +126,40 @@ public class TaskDB extends Database {
         }
         return ret;
     }
-    
+
     public void insertTask(String query) {
-    	 try {
-             
-             PreparedStatement  ps = DBconnector.getconnector().getconnection().prepareStatement(query);
-             ps.execute();
-           
-         } catch (Exception e) {
-             e.printStackTrace();
-         }
-    	
+        try {
+
+            PreparedStatement ps = DBconnector.getconnector().getconnection().prepareStatement(query);
+            ps.execute();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
-    public List<Task> getAlltasks(){
+
+
+    public boolean checkTask(PreparedStatement query) {
+        List<Task> ret = null;
+        boolean result = false;
+        ResultSet rs = null;
+        try {
+            checkConn();
+            rs = query.executeQuery();
+            if (rs.first()) {
+                result = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            //close(rs);
+        }
+        return result;
+    }
+
+
+    public List<Task> getAlltasks() {
         List<Task> ret = null;
         final String sql = "SELECT * FROM task ";
         PreparedStatement ps = null;
@@ -163,7 +191,7 @@ public class TaskDB extends Database {
         }
         return ret;
     }
-    
+
     public List<Task> getTaskListByUserId(Integer userId) {
         List<Task> ret = null;
         final String sql = "SELECT * FROM task WHERE user_UserID = ?";

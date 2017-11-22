@@ -67,7 +67,7 @@ tasksController = function () {
     }
 ///////////////////////////////////////////////////
     function renderTable() {
-    	$.each($(taskPage).find('#tblTasks tbody tr'), function (idx, row) {
+        $.each($(taskPage).find('#tblTasks tbody tr'), function (idx, row) {
             var due = Date.parse($(row).find('[datetime]').text());
             if (due.compareTo(Date.today()) < 0) {
                 $(row).addClass("overdue");
@@ -88,6 +88,17 @@ tasksController = function () {
                 let td1 = $('<td>').append(team.id);
                 let td2 = $('<td>').append(team.name);
                 let td3 = $('<td>');
+                if (team.teamMemberList == null) {
+                    td3.append("");
+                } else {
+                    $.each(team.teamMemberList, function (index, member) {
+                        let span = $('<span>', {
+                            'text': member.userId + ", "
+                        })
+                        td3.append(span);
+                    })
+                }
+                let td4 = $('<td>');
                 let nav = $('<nav>')
                     .append($('<a>', {
                         'href': '#',
@@ -96,14 +107,21 @@ tasksController = function () {
                         'text': 'Delete'
                     }))
                     .append(' ')
+                    .append($('<input>').attr({
+                        'type': 'text',
+                        'size': '4',
+                        'placeHolder': 'user id',
+                        'id': 'userId_' + team.id
+                    }))
+                    .append(' ')
                     .append($('<a>', {
                         'href': '#',
                         'class': 'joinBtnTeam',
                         'onclick': 'tasksController.joinTeam(' + team.id + ')',
                         'text': 'Join'
                     }));
-                td3.append(nav);
-                tr.append(td1).append(td2).append(td3);
+                td4.append(nav);
+                tr.append(td1).append(td2).append(td3).append(td4);
                 $(taskPage).find('#tblTeams tbody').append(tr);
                 console.log('about to render table with server teams');
             });
@@ -140,82 +158,82 @@ tasksController = function () {
                         $(taskPage).find('#teamCreation').addClass('not');
 				});
 
-				$(taskPage).find('#btntoServer').click(function() {
+                $(taskPage).find('#btntoServer').click(function () {
 
 
-					storageEngine.findAll('task', function(tasks) {
+                    storageEngine.findAll('task', function (tasks) {
 
-					$.each(tasks, function(index, task) {
-						//console.log(JSON.stringify(task));
+                        $.each(tasks, function (index, task) {
+                            //console.log(JSON.stringify(task));
 
-						$.ajax("task", {
-						 type: "post",
-						 data: JSON.stringify(task),
-						 contentType: "application/json; charset=utf-8"
-						 }).done(function (data) {
-							 $("#msg").removeClass("not");
-		                    $("#msg").html(data);
-                    })
-                    .fail(function(data){
-                    	$("#msg").removeClass("not");
-                    	$("#msg").html(data);
-                    });
+                            $.ajax("task", {
+                                type: "post",
+                                data: JSON.stringify(task),
+                                contentType: "application/json; charset=utf-8"
+                            }).done(function (data) {
+                                $("#msg").removeClass("not");
+                                $("#msg").html(data);
+                            })
+                                .fail(function (data) {
+                                    $("#msg").removeClass("not");
+                                    $("#msg").html(data);
+                                });
 
-					});
-				}, errorLogger);
+                        });
+                    }, errorLogger);
 
-				});
+                });
 
 
                 /** * 11/19/17kl */
-                $(taskPage).find('#btnRetrieveTasks').click(function(evt) {
+                $(taskPage).find('#btnRetrieveTasks').click(function (evt) {
                     evt.preventDefault();
                     console.log('making ajax call');
                     retrieveTasksServer();
                     $('#filterSection').removeClass('taskNot');
                 });
 
-				$(taskPage).find('#tblTasks tbody').on('click', 'tr', function(evt) {
-					$(evt.target).closest('td').siblings().andSelf().toggleClass('rowHighlight');
-				});
+                $(taskPage).find('#tblTasks tbody').on('click', 'tr', function (evt) {
+                    $(evt.target).closest('td').siblings().andSelf().toggleClass('rowHighlight');
+                });
 
-				$(taskPage).find('#tblTasks tbody').on('click', '.deleteRow', function(evt) {
-						storageEngine.delete('task', $(evt.target).data().taskId, function() {
-								$(evt.target).parents('tr').remove();
-								taskCountChanged();
-							}, errorLogger);
-					});
+                $(taskPage).find('#tblTasks tbody').on('click', '.deleteRow', function (evt) {
+                    storageEngine.delete('task', $(evt.target).data().taskId, function () {
+                        $(evt.target).parents('tr').remove();
+                        taskCountChanged();
+                    }, errorLogger);
+                });
 
-				$(taskPage).find('#tblTasks tbody').on('click', '.editRow', function(evt) {
-						$(taskPage).find('#taskCreation').removeClass('not');
-						storageEngine.findById('task', $(evt.target).data().taskId, function(task) {
-							$(taskPage).find('form').fromObject(task);
-						}, errorLogger);
-					});
+                $(taskPage).find('#tblTasks tbody').on('click', '.editRow', function (evt) {
+                    $(taskPage).find('#taskCreation').removeClass('not');
+                    storageEngine.findById('task', $(evt.target).data().taskId, function (task) {
+                        $(taskPage).find('form').fromObject(task);
+                    }, errorLogger);
+                });
 
-				$(taskPage).find('#clearTask').click(function(evt) {
-					evt.preventDefault();
-					clearTask();
-				});
+                $(taskPage).find('#clearTask').click(function (evt) {
+                    evt.preventDefault();
+                    clearTask();
+                });
 
-				$(taskPage).find('#tblTasks tbody').on('click', '.completeRow', function(evt) {
-					storageEngine.findById('task', $(evt.target).data().taskId, function(task) {
-						task.complete = true;
-						storageEngine.save('task', task, function() {
-							tasksController.loadTasks();
-						},errorLogger);
-					}, errorLogger);
-				});
+                $(taskPage).find('#tblTasks tbody').on('click', '.completeRow', function (evt) {
+                    storageEngine.findById('task', $(evt.target).data().taskId, function (task) {
+                        task.complete = true;
+                        storageEngine.save('task', task, function () {
+                            tasksController.loadTasks();
+                        }, errorLogger);
+                    }, errorLogger);
+                });
 
 
                 /////// Edits by Ramy Badawy
-                $(taskPage).find('#prioritySort').click(function(evt){
+                $(taskPage).find('#prioritySort').click(function (evt) {
                     //console.log(this);
                     sortBy = "priority";
                     tasksController.loadTasks();
                 });
 
-                $(taskPage).find('#dueSort').click(function(evt){
+                $(taskPage).find('#dueSort').click(function (evt) {
                     //console.log(this);
                     sortBy = "dueDate";
                     tasksController.loadTasks();
@@ -294,7 +312,7 @@ tasksController = function () {
                     $.get('task', {
                         'userId': userId
                     }).done(function (data) {
-                    	tasksController.loadServerTasks(data);
+                        tasksController.loadServerTasks(data);
                     });
                 });
 
@@ -315,7 +333,7 @@ tasksController = function () {
          */
         loadServerTasks: function (tasks) {
             $(taskPage).find('#tblTasks tbody').empty();
-            
+
             $.each(tasks, function (index, task) {
                 if (!task.complete) {
                     task.complete = false;
@@ -324,7 +342,7 @@ tasksController = function () {
                 taskCountChanged();
                 console.log('about to render table with server tasks');
                 // renderTable(); --skip for now, this just sets style class for
-				// overdue tasks 111917kl
+                // overdue tasks 111917kl
             });
         },
 
@@ -334,7 +352,7 @@ tasksController = function () {
             storageEngine.findAll('task', function (tasks) {
                 //console.log(tasks);
                 tasks.sort(function (o1, o2) {
-                    if(sortBy == "priority")
+                    if (sortBy == "priority")
                         return o1.priority > o2.priority;
                     else
                         return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
@@ -376,7 +394,23 @@ tasksController = function () {
             });
         },
         joinTeam: function (id) {
-            alert(id);
+            let userId = $('#userId_' + id).val();
+            let sendInfo = {
+                'id': id,
+                'userId': userId
+            };
+            $.ajax('member', {
+                'type': 'POST',
+                dataType: "text",
+                data: JSON.stringify(sendInfo),
+                contentType: "application/json; charset=utf-8"
+            }).done(function (data) {
+                $('#userId_' + id).val('');
+                loadTeams();
+            }).fail(function (xhr, status, exception) {
+                alert(xhr.responseText);
+                console.log(xhr, status, exception);
+            });
         }
     }
 }();
