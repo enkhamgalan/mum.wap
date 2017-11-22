@@ -265,7 +265,7 @@ tasksController = function () {
                     $.get('task', {
                         'userId': userId
                     }).done(function (data) {
-                        retrieveTasksServerByUserId(data);
+                    	tasksController.loadServerTasks(data);
                     });
                 });
 
