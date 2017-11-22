@@ -45,7 +45,6 @@ PrintWriter out = response.getWriter();
             e.printStackTrace();
         }
 
-
         Task task = null;
         try {
             task = new Task(0,

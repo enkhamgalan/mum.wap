@@ -27,7 +27,8 @@ storageEngine = function() {
 	    	initializedObjectStores[type] = true;
 	    	successCallback(null);
 	    },
-	    save: function(type, obj, successCallback, errorCallback) { 
+
+		save: function(type, obj, successCallback, errorCallback) {
 	        if (!initialized) {
 	       	   errorCallback('storage_api_not_initialized', 'The storage engine has not been initialized');
 	        } else if (!initializedObjectStores[type]) {

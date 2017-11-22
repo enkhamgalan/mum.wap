@@ -20,7 +20,7 @@
 </header>
 <main id="taskPage">
     <section id="taskCreation" class="not">
-        <form id="taskForm">
+        <form frm_task>
             <input type="hidden" name="id"/>
             <div>
                 <label>Task</label>
@@ -72,7 +72,6 @@
     </section>
     <section>
         <table id="tblTasks">
-
             <colgroup>
                 <col width="5%">       <!--  user id-->
                 <col width="25%">       <!--  Name-->
@@ -81,28 +80,27 @@
                 <col width="15%">       <!--  Priority-->
                 <col width="30%">       <!--  Actions-->
             </colgroup>
-
             <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Name</th>
-                <th>
-                    <div id="dueSort" class="inline2">
-                        <div class="arrow-up"></div>
-                        <div class="arrow-down"></div>
-                    </div>
-                    Due
-                </th>
-                <th>Category</th>
-                <th>
-                    <div id="prioritySort" class="inline2">
-                        <div class="arrow-up"></div>
-                        <div class="arrow-down"></div>
-                    </div>
-                    Priority
-                </th>
-                <th>Actions</th>
-            </tr>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>
+                        <div id="dueSort" class="inline2">
+                            <div class="arrow-up"></div>
+                            <div class="arrow-down"></div>
+                        </div>
+                        Due
+                    </th>
+                    <th>Category</th>
+                    <th>
+                        <div id="prioritySort" class="inline2">
+                            <div class="arrow-up"></div>
+                            <div class="arrow-down"></div>
+                        </div>
+                        Priority
+                    </th>
+                    <th>Actions</th>
+                </tr>
             </thead>
             <tbody>
             </tbody>
@@ -116,13 +114,24 @@
         <br>
         <hr size="1"/>
     </section>
+
     <!--SDIMPL-->
-    <section id="teamCreation" class="teamNot">
-        <nav>
-            <label>Team name: </label><input type="text" id="teamName">
-            <a href="#" id="btnAddTeam">Save Team</a>
-            <a href="#" id="btnRetrieveTeams">Retrieve teams from server</a>
-        </nav>
+    <section id="teamCreation" class="not">
+        <form id="frm_team">
+            <input type="hidden" name="id"/>
+            <div>
+                <label>Team name: </label>
+                <input type="text" required="required" name="teamname" id="teamName"
+                       placeholder="Type yor team name" maxlength="200"/>
+            </div>
+
+            <nav>
+                <a href="#" id="btnAddTeam">Save Team</a>
+                <a href="#" id="btnRetrieveTeams">Retrieve teams from server</a>
+            </nav>
+        </form>
+    </section>
+    <section>
         <table id="tblTeams">
             <colgroup>
                 <col width="10%">
@@ -131,12 +140,12 @@
                 <col width="30%">
             </colgroup>
             <thead>
-            <tr>
-                <th>Id</th>
-                <th>Team Name</th>
-                <th>Team Members Id</th>
-                <th>Actions</th>
-            </tr>
+                <tr>
+                    <th>Id</th>
+                    <th>Team Name</th>
+                    <th>Team Members Id</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
             <tbody>
             </tbody>
@@ -151,6 +160,7 @@
         $(document).ready(function () {
             tasksController.init($('#taskPage'), function () {
                 tasksController.loadTasks();
+                //tasksController.loadTeams();
             });
         });
     }
@@ -194,5 +204,16 @@
 	</td>
 </tr>
 </script>
+<!--<script id="teamRow" type="text/x-jQuery-tmpl">-->
+<!--<tr>-->
+    <!--<td>${teamname}</td>-->
+	<!--<td>-->
+		<!--<nav>-->
+			<!--<a href="#" class="editRow" data-task-id="${id}">Edit</a>-->
+			<!--<a href="#" class="deleteRow" data-task-id="${id}">Delete</a>-->
+		<!--</nav>-->
+	<!--</td>-->
+<!--</tr>-->
+<!--</script>-->
 </html>
 

@@ -61,6 +61,10 @@ tasksController = function () {
     function clearTask() {
         $(taskPage).find('form').fromObject({});
     }
+
+    function clearTeam() {
+        $(taskPage).find('#frm_team').fromObject({});
+    }
 ///////////////////////////////////////////////////
     function renderTable() {
         $.each($(taskPage).find('#tblTasks tbody tr'), function (idx, row) {
@@ -118,17 +122,22 @@ tasksController = function () {
                     }, errorLogger)
                 }, errorLogger);
 
-				$(taskPage).find('[required="required"]')
-                            .prev('label')
-                            .append( '<span>*</span>')
-                            .children( 'span')
-                            .addClass('required');
+                // storageEngine.init(function () {
+                //     storageEngine.initObjectStore('team', function () {
+                //         callback();
+                //     }, errorLogger)
+                // }, errorLogger);
+
+				$(taskPage).find('[required="required"]').prev('label')
+                    .append( '<span>*</span>').children( 'span').addClass('required');
 
 				$(taskPage).find('tbody tr:even').addClass('even');
 
 				$(taskPage).find('#btnAddTask').click(function(evt) {
 					evt.preventDefault();
 					$(taskPage).find('#taskCreation').removeClass('not');
+                    if (!$(taskPage).find('#teamCreation').hasClass('not'))
+                        $(taskPage).find('#teamCreation').addClass('not');
 				});
 
 				$(taskPage).find('#btntoServer').click(function() {
@@ -212,7 +221,7 @@ tasksController = function () {
                     evt.preventDefault();
                     if ($(taskPage).find('form').valid()) {
                         var task = $(taskPage).find('form').toObject();
-
+                        console.log(task);
                         //Edits By Ramy Badawy
                         // Adding order property to each task, to sort with it later on
                         let sel = $(taskPage).find('#priorityID option:selected').data("order");
@@ -227,29 +236,49 @@ tasksController = function () {
                         }, errorLogger);
                     }
                 });
+
                 initialised = true;
 
                 // SDIMPL
-                $(taskPage).find('#btnManageTeam').click(function () {
-                    $(taskPage).find('#teamCreation').removeClass('teamNot');
+                $(taskPage).find('#btnManageTeam').click(function (evt) {
+                    evt.preventDefault();
+                    $(taskPage).find('#teamCreation').removeClass('not');
+                    if (!$(taskPage).find('#taskCreation').hasClass('not'))
+                        $(taskPage).find('#taskCreation').addClass('not');
                 });
 
-                $(taskPage).find('#btnAddTeam').click(function () {
-                    let teamName = $('#teamName').val();
-                    let sendInfo = {
-                        'name': teamName
-                    };
-                    $.ajax('team', {
-                        'type': 'POST',
-                        dataType: "json",
-                        data: JSON.stringify(sendInfo),
-                        contentType: "application/json; charset=utf-8"
-                    }).done(function (data) {
-                        $('#teamName').val('');
-                        loadTeams();
-                    });
-
-                });
+                // $(taskPage).find('#btnAddTeam').click(function (evt) {
+                //     //Edits By Ramy Badawy
+                //     // save to local db
+                //     evt.preventDefault();
+                //     if ($(taskPage).find('#frm_team').valid()) {
+                //        var team = $(taskPage).find('#frm_team').toObject();
+                //        console.log(team);
+                //
+                //        storageEngine.save('team', team, function () {
+                //             $(taskPage).find('#tblTeams tbody').empty();
+                //             tasksController.loadTeams();
+                //             clearTeam();
+                //             $(taskPage).find('#teamCreation').addClass('not');
+                //         }, errorLogger);
+                //     }
+                //
+                //     // save to server
+                //     let teamName = $('#teamName').val();
+                //     let sendInfo = {
+                //         'name': teamName
+                //     };
+                //     $.ajax('team', {
+                //         'type': 'POST',
+                //         dataType: "json",
+                //         data: JSON.stringify(sendInfo),
+                //         contentType: "application/json; charset=utf-8"
+                //     }).done(function (data) {
+                //         $('#teamName').val('');
+                //         loadTeams();
+                //     });
+                //
+                // });
 
                 $(taskPage).find('#btnRetrieveTeams').click(function () {
                     loadTeams();
@@ -314,6 +343,25 @@ tasksController = function () {
                 });
             }, errorLogger);
         },
+
+        // loadTeams: function () {
+        //     $(taskPage).find('#tblTeams tbody').empty();
+        //
+        //     storageEngine.findAll('team', function (teams) {
+        //         //console.log(teams);
+        //         teams.sort(function (o1, o2) {
+        //             return o1.teamname > o2.teamname;
+        //         });
+        //         $.each(teams, function (index, team) {
+        //             console.log("index is " + index + " Key is " + team.id + " Team name is " + team.teamname);
+        //             $(taskPage).find('#tblTeam tbody').append(team);
+        //             $('#teamRow').tmpl(team).appendTo($(taskPage).find('#tblTeam tbody'));
+        //             // taskCountChanged();
+        //             // renderTable();
+        //         });
+        //     }, errorLogger);
+        // },
+
         deleteTeam: function (id) {
             $.ajax('team?id=' + id, {
                 'type': 'DELETE'
