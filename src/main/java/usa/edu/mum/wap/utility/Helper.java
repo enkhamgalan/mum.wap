@@ -14,6 +14,10 @@ public class Helper {
         		+'"'+task.getUserId()+'"'+")";
     }
 
+    public String selectTasks(String condition){
+        return "select * from task where " + condition;
+    }
+
     public String retrieveTask(int userID){
         return "select * from task where UserID = "+userID + " or true order by TaskPriority DESC"  ;
     }
