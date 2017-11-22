@@ -135,7 +135,9 @@ tasksController = function () {
             } else {
                 taskPage = page;
                 storageEngine.init(function () {
-                    storageEngine.initObjectStore('task team', function () { callback(); }, errorLogger);
+                    storageEngine.initObjectStore('task team', function () {
+                        callback();
+                    }, errorLogger);
                     console.log("Team table is created");
                 }, errorLogger);
 
@@ -282,10 +284,10 @@ tasksController = function () {
                     // save to local db
                     evt.preventDefault();
                     if ($(taskPage).find('#frm_team').valid()) {
-                       var team = $(taskPage).find('#frm_team').toObject();
-                       console.log(team);
+                        var team = $(taskPage).find('#frm_team').toObject();
+                        console.log(team);
 
-                       storageEngine.save('team', team, function () {
+                        storageEngine.save('team', team, function () {
                             $(taskPage).find('#tblTeams tbody').empty();
                             tasksController.loadTeams();
                             clearTeam();
@@ -294,19 +296,19 @@ tasksController = function () {
                     }
 
                     // save to server
-                    // let teamName = $('#teamName').val();
-                    // let sendInfo = {
-                    //     'name': teamName
-                    // };
-                    // $.ajax('team', {
-                    //     'type': 'POST',
-                    //     dataType: "json",
-                    //     data: JSON.stringify(sendInfo),
-                    //     contentType: "application/json; charset=utf-8"
-                    // }).done(function (data) {
-                    //     $('#teamName').val('');
-                    //     loadTeams();
-                    // });
+                    let teamName = $('#teamName').val();
+                    let sendInfo = {
+                        'name': teamName
+                    };
+                    $.ajax('team', {
+                        'type': 'POST',
+                        dataType: "json",
+                        data: JSON.stringify(sendInfo),
+                        contentType: "application/json; charset=utf-8"
+                    }).done(function (data) {
+                        $('#teamName').val('');
+                        loadTeams();
+                    });
 
                 });
 
