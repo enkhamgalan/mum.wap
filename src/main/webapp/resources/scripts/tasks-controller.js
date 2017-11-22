@@ -6,7 +6,7 @@ tasksController = function () {
 
     var taskPage;
     var initialised = false;
-    var flag = true;
+    var sortBy = "dueDate";
 
     /**
 	 * makes json call to server to get task list. currently just testing this
@@ -150,7 +150,6 @@ tasksController = function () {
 					});
 				}, errorLogger);
 
-
 				});
 
 
@@ -171,9 +170,7 @@ tasksController = function () {
 								$(evt.target).parents('tr').remove();
 								taskCountChanged();
 							}, errorLogger);
-
-					}
-				);
+					});
 
 				$(taskPage).find('#tblTasks tbody').on('click', '.editRow', function(evt) {
 						$(taskPage).find('#taskCreation').removeClass('not');
@@ -199,17 +196,25 @@ tasksController = function () {
 
                 /////// Edits by Ramy Badawy
                 $(taskPage).find('#prioritySort').click(function(evt){
-                    console.log(this);
-                    flag = false;
+                    //console.log(this);
+                    sortBy = "priority";
                     tasksController.loadTasks();
                 });
 
+                $(taskPage).find('#dueSort').click(function(evt){
+                    //console.log(this);
+                    sortBy = "dueDate";
+                    tasksController.loadTasks();
+                });
+                // ending edits
 
                 $(taskPage).find('#saveTask').click(function (evt) {
                     evt.preventDefault();
                     if ($(taskPage).find('form').valid()) {
                         var task = $(taskPage).find('form').toObject();
 
+                        //Edits By Ramy Badawy
+                        // Adding order property to each task, to sort with it later on
                         let sel = $(taskPage).find('#priorityID option:selected').data("order");
                         task.order = sel;
                         // ending edits
@@ -294,10 +299,10 @@ tasksController = function () {
             storageEngine.findAll('task', function (tasks) {
                 //console.log(tasks);
                 tasks.sort(function (o1, o2) {
-                    if(flag)
-                        return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
-                    else
+                    if(sortBy == "priority")
                         return o1.priority > o2.priority;
+                    else
+                        return Date.parse(o1.requiredBy).compareTo(Date.parse(o2.requiredBy));
                 });
                 $.each(tasks, function (index, task) {
                     if (!task.complete) {

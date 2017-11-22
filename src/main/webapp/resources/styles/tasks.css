@@ -141,29 +141,34 @@ label.error {
     text-decoration: line-through;
 }
 
+#prioritySort, #dueSort{
+    padding: 5px;
+}
+
 .arrow-up {
     width: 0;
     height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
 
-    border-bottom: 10px solid white;
+    border-bottom: 7px solid white;
     margin-bottom: 2px;
 }
 
 .arrow-down {
     width: 0;
     height: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
 
-    border-top: 10px solid white;
+    border-top: 7px solid white;
 }
 
 div.inline2{
     display: inline-block;
-    margin-left: 10px;
+    margin-right: 15px;
     overflow: hidden;
     vertical-align: middle;
     cursor: pointer;
+    text-align: left;
 }
