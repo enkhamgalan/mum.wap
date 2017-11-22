@@ -9,13 +9,13 @@ tasksController = function () {
     var sortBy = "dueDate";
 
     /**
-	 * makes json call to server to get task list. currently just testing this
-	 * and writing return value out to console 111917kl
-	 */
-	function retrieveTasksServer() {
+     * makes json call to server to get task list. currently just testing this
+     * and writing return value out to console 111917kl
+     */
+    function retrieveTasksServer() {
         $.ajax("task", {
             "type": "get",
-			dataType: "json"
+            dataType: "json"
             // "data": {
             // "first": first,
             // "last": last
@@ -42,14 +42,14 @@ tasksController = function () {
     }
 
     /**
-	 * 111917kl callback for retrieveTasksServer
-	 *
-	 * @param data
-	 */
+     * 111917kl callback for retrieveTasksServer
+     *
+     * @param data
+     */
     function displayTasksServer(data) { // this needs to be bound to the
-										// tasksController -- used bind in
-										// retrieveTasksServer 111917kl
-    	console.log(data);
+        // tasksController -- used bind in
+        // retrieveTasksServer 111917kl
+        console.log(data);
         tasksController.loadServerTasks(data);
     }
 
@@ -65,6 +65,7 @@ tasksController = function () {
     function clearTeam() {
         $(taskPage).find('#frm_team').fromObject({});
     }
+
 ///////////////////////////////////////////////////
     function renderTable() {
         $.each($(taskPage).find('#tblTasks tbody tr'), function (idx, row) {
@@ -78,7 +79,6 @@ tasksController = function () {
     }
 
     function loadTeams() {
-
         $.ajax('team', {
             "type": "GET",
         }).done(function (jdata) {
@@ -135,28 +135,21 @@ tasksController = function () {
             } else {
                 taskPage = page;
                 storageEngine.init(function () {
-                    storageEngine.initObjectStore('task', function () {
-                        callback();
-                    }, errorLogger)
+                    storageEngine.initObjectStore('task team', function () { callback(); }, errorLogger);
+                    console.log("Team table is created");
                 }, errorLogger);
 
-                // storageEngine.init(function () {
-                //     storageEngine.initObjectStore('team', function () {
-                //         callback();
-                //     }, errorLogger)
-                // }, errorLogger);
+                $(taskPage).find('[required="required"]').prev('label')
+                    .append('<span>*</span>').children('span').addClass('required');
 
-				$(taskPage).find('[required="required"]').prev('label')
-                    .append( '<span>*</span>').children( 'span').addClass('required');
+                $(taskPage).find('tbody tr:even').addClass('even');
 
-				$(taskPage).find('tbody tr:even').addClass('even');
-
-				$(taskPage).find('#btnAddTask').click(function(evt) {
-					evt.preventDefault();
-					$(taskPage).find('#taskCreation').removeClass('not');
+                $(taskPage).find('#btnAddTask').click(function (evt) {
+                    evt.preventDefault();
+                    $(taskPage).find('#taskCreation').removeClass('not');
                     if (!$(taskPage).find('#teamCreation').hasClass('not'))
                         $(taskPage).find('#teamCreation').addClass('not');
-				});
+                });
 
                 $(taskPage).find('#btntoServer').click(function () {
 
@@ -203,6 +196,21 @@ tasksController = function () {
                         taskCountChanged();
                     }, errorLogger);
                 });
+
+                //SDIMPL START
+                $(taskPage).find('#tblTeams tbody').on('click', '.deleteRow', function (evt) {
+                    storageEngine.delete('team', $(evt.target).data().taskId, function () {
+                        $(evt.target).parents('tr').remove();
+                        taskCountChanged();
+                    }, errorLogger);
+                });
+                $(taskPage).find('#tblTeams tbody').on('click', '.editRow', function (evt) {
+                    $(taskPage).find('#teamCreation').removeClass('not');
+                    storageEngine.findById('team', $(evt.target).data().taskId, function (team) {
+                        $(taskPage).find('form').fromObject(team);
+                    }, errorLogger);
+                });
+                //SDIMPL END
 
                 $(taskPage).find('#tblTasks tbody').on('click', '.editRow', function (evt) {
                     $(taskPage).find('#taskCreation').removeClass('not');
@@ -260,48 +268,49 @@ tasksController = function () {
                     }
                 });
 
-                initialised = true;
-
-                // SDIMPL
+                // SDIMPL START
                 $(taskPage).find('#btnManageTeam').click(function (evt) {
                     evt.preventDefault();
                     $(taskPage).find('#teamCreation').removeClass('not');
                     if (!$(taskPage).find('#taskCreation').hasClass('not'))
                         $(taskPage).find('#taskCreation').addClass('not');
+
                 });
 
-                // $(taskPage).find('#btnAddTeam').click(function (evt) {
-                //     //Edits By Ramy Badawy
-                //     // save to local db
-                //     evt.preventDefault();
-                //     if ($(taskPage).find('#frm_team').valid()) {
-                //        var team = $(taskPage).find('#frm_team').toObject();
-                //        console.log(team);
-                //
-                //        storageEngine.save('team', team, function () {
-                //             $(taskPage).find('#tblTeams tbody').empty();
-                //             tasksController.loadTeams();
-                //             clearTeam();
-                //             $(taskPage).find('#teamCreation').addClass('not');
-                //         }, errorLogger);
-                //     }
-                //
-                //     // save to server
-                //     let teamName = $('#teamName').val();
-                //     let sendInfo = {
-                //         'name': teamName
-                //     };
-                //     $.ajax('team', {
-                //         'type': 'POST',
-                //         dataType: "json",
-                //         data: JSON.stringify(sendInfo),
-                //         contentType: "application/json; charset=utf-8"
-                //     }).done(function (data) {
-                //         $('#teamName').val('');
-                //         loadTeams();
-                //     });
-                //
-                // });
+                $(taskPage).find('#btnAddTeam').click(function (evt) {
+                    //Edits By Ramy Badawy
+                    // save to local db
+                    evt.preventDefault();
+                    if ($(taskPage).find('#frm_team').valid()) {
+                       var team = $(taskPage).find('#frm_team').toObject();
+                       console.log(team);
+
+                       storageEngine.save('team', team, function () {
+                            $(taskPage).find('#tblTeams tbody').empty();
+                            tasksController.loadTeams();
+                            clearTeam();
+                            $(taskPage).find('#teamCreation').addClass('not');
+                        }, errorLogger);
+                    }
+
+                    // save to server
+                    // let teamName = $('#teamName').val();
+                    // let sendInfo = {
+                    //     'name': teamName
+                    // };
+                    // $.ajax('team', {
+                    //     'type': 'POST',
+                    //     dataType: "json",
+                    //     data: JSON.stringify(sendInfo),
+                    //     contentType: "application/json; charset=utf-8"
+                    // }).done(function (data) {
+                    //     $('#teamName').val('');
+                    //     loadTeams();
+                    // });
+
+                });
+
+                initialised = true;
 
                 $(taskPage).find('#btnRetrieveTeams').click(function () {
                     loadTeams();
@@ -324,7 +333,7 @@ tasksController = function () {
                         retrieveTasksServerByTeamId(data);
                     });
                 });
-                // SDIMPL
+                // SDIMPL END
             }
         },
         /**
@@ -368,23 +377,29 @@ tasksController = function () {
             }, errorLogger);
         },
 
-        // loadTeams: function () {
-        //     $(taskPage).find('#tblTeams tbody').empty();
-        //
-        //     storageEngine.findAll('team', function (teams) {
-        //         //console.log(teams);
-        //         teams.sort(function (o1, o2) {
-        //             return o1.teamname > o2.teamname;
-        //         });
-        //         $.each(teams, function (index, team) {
-        //             console.log("index is " + index + " Key is " + team.id + " Team name is " + team.teamname);
-        //             $(taskPage).find('#tblTeam tbody').append(team);
-        //             $('#teamRow').tmpl(team).appendTo($(taskPage).find('#tblTeam tbody'));
-        //             // taskCountChanged();
-        //             // renderTable();
-        //         });
-        //     }, errorLogger);
-        // },
+        loadTeams: function () {
+            $(taskPage).find('#tblTeams tbody').empty();
+
+            storageEngine.findAll('team', function (teams) {
+                //console.log(teams);
+                teams.sort(function (o1, o2) {
+                    return o1.teamname > o2.teamname;
+                });
+                $.each(teams, function (index, team) {
+                    console.log("index is " + index + " Key is " + team.id + " Team name is " + team.teamname);
+                    // let tr = $('<tr>');
+                    // let td1 = $('<td>').append(team.id);
+                    // let td2 = $('<td>').append(team.teamname);
+                    // tr.append(td1).append(td2);
+                    // $(taskPage).find('#tblTeams tbody').append(tr);
+
+                    $('#teamRow').tmpl(team).appendTo($(taskPage).find('#tblTeams tbody'));
+
+                    // taskCountChanged();
+                    // renderTable();
+                });
+            }, errorLogger);
+        },
 
         deleteTeam: function (id) {
             $.ajax('team?id=' + id, {

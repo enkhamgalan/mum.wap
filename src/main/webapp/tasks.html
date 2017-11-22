@@ -162,7 +162,7 @@
         $(document).ready(function () {
             tasksController.init($('#taskPage'), function () {
                 tasksController.loadTasks();
-                //tasksController.loadTeams();
+                tasksController.loadTeams();
             });
         });
     }
@@ -206,16 +206,18 @@
 	</td>
 </tr>
 </script>
-<!--<script id="teamRow" type="text/x-jQuery-tmpl">-->
-<!--<tr>-->
-    <!--<td>${teamname}</td>-->
-	<!--<td>-->
-		<!--<nav>-->
-			<!--<a href="#" class="editRow" data-task-id="${id}">Edit</a>-->
-			<!--<a href="#" class="deleteRow" data-task-id="${id}">Delete</a>-->
-		<!--</nav>-->
-	<!--</td>-->
-<!--</tr>-->
-<!--</script>-->
+<script id="teamRow" type="text/x-jQuery-tmpl">
+<tr>
+    <td>${id}</td>
+    <td>${teamname}</td>
+    <td></td>
+	<td>
+		<nav>
+			<a href="#" class="editRow" data-task-id="${id}">Edit</a>
+			<a href="#" class="deleteRow" data-task-id="${id}">Delete</a>
+		</nav>
+	</td>
+</tr>
+</script>
 </html>
 
