@@ -63,7 +63,7 @@ tasksController = function () {
     }
 ///////////////////////////////////////////////////
     function renderTable() {
-        $.each($(taskPage).find('#tblTasks tbody tr'), function (idx, row) {
+    	$.each($(taskPage).find('#tblTasks tbody tr'), function (idx, row) {
             var due = Date.parse($(row).find('[datetime]').text());
             if (due.compareTo(Date.today()) < 0) {
                 $(row).addClass("overdue");
@@ -137,15 +137,20 @@ tasksController = function () {
 					storageEngine.findAll('task', function(tasks) {
 
 					$.each(tasks, function(index, task) {
-						console.log(JSON.stringify(task));
+						//console.log(JSON.stringify(task));
 
 						$.ajax("task", {
 						 type: "post",
 						 data: JSON.stringify(task),
-						 contentType: "application/json",
-						 dataType: "json"
-
-			        }).done(displayTasksServer.bind());
+						 contentType: "application/json; charset=utf-8"
+						 }).done(function (data) {
+							 $("#msg").removeClass("not");
+		                    $("#msg").html(data);
+                    })
+                    .fail(function(data){
+                    	$("#msg").removeClass("not");
+                    	$("#msg").html(data);
+                    });
 
 					});
 				}, errorLogger);
@@ -281,6 +286,7 @@ tasksController = function () {
          */
         loadServerTasks: function (tasks) {
             $(taskPage).find('#tblTasks tbody').empty();
+            
             $.each(tasks, function (index, task) {
                 if (!task.complete) {
                     task.complete = false;

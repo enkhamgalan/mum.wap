@@ -27,7 +27,7 @@ import java.util.List;
 public class TaskServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("TEST");
+		String msg="" ;
 
 		PrintWriter out = response.getWriter();
 
@@ -69,20 +69,18 @@ public class TaskServlet extends HttpServlet {
 						Integer.parseInt(jsonObj.getString("priority")));
 				db.insertTask(helper.insertTask(task));
 				
-				System.out.println("Task inserted");
+				msg = "Task inserted";
 
 			} else {
-				System.out.println(" Task already exist");
+				msg= "there are tasks already saved!" ;
 			}
 
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
 
+		out.print(msg);
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
