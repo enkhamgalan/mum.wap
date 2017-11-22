@@ -1,8 +1,8 @@
 package usa.edu.mum.wap.controller;
 
 import com.google.gson.Gson;
-import usa.edu.mum.wap.model.Team;
 import usa.edu.mum.wap.model.TeamMember;
+import usa.edu.mum.wap.utility.Config;
 import usa.edu.mum.wap.utility.DBconnector;
 import usa.edu.mum.wap.utility.TaskDB;
 
@@ -45,5 +45,11 @@ public class TeamMemberServlet extends HttpServlet {
         DBconnector.getconnector().closeConnection();
         System.out.println("TeamMemberServlet was destroying");
         super.destroy();
+    }
+
+    @Override
+    public void init() throws ServletException {
+        Config.loadConfig();
+        super.init();
     }
 }
